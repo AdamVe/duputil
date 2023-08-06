@@ -27,6 +27,8 @@ elif [ "${COMMAND}" == "vl" ]; then
     duplicity verify -v3 --progress "${REMOTE_DEST}" "${LOCAL_DIR}"
 elif [ "${COMMAND}" == "b" ]; then
     duplicity --progress -v3 "${LOCAL_DIR}" "${REMOTE_DEST}"
+elif [ "${COMMAND}" == "r" ]; then
+    duplicity restore -vi "${REMOTE_DEST}" "${LOCAL_DIR}"
 else
     echo "Invalid command ${COMMAND}"
 fi
