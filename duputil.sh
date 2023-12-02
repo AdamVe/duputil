@@ -14,6 +14,8 @@ BACKUP_NAME="${3}"
 LOCAL_DIR="${4}"
 REMOTE_DEST="${REMOTE_ROOT}/${BACKUP_NAME}"
 
+VERBOSITY=5
+
 if [[ ! -d "${LOCAL_DIR}" ]]; then
     echo "Dir ${LOCAL_DIR} not found"
     exit -1
@@ -22,13 +24,11 @@ fi
 export PASSPHRASE=$(secret-tool lookup backup-name "${BACKUP_NAME}")
 
 if [ "${COMMAND}" == "v" ]; then
-    duplicity verify --compare-data -v8 --progress "${REMOTE_DEST}" "${LOCAL_DIR}"
-elif [ "${COMMAND}" == "vl" ]; then
-    duplicity verify -v8 --progress "${REMOTE_DEST}" "${LOCAL_DIR}"
+    duplicity verify --compare-data -v${VERBOSITY} --progress "${REMOTE_DEST}" "${LOCAL_DIR}"
 elif [ "${COMMAND}" == "b" ]; then
-    duplicity --progress -v8 "${LOCAL_DIR}" "${REMOTE_DEST}"
+    duplicity --full-if-older-than 6M --progress -v${VERBOSITY} "${LOCAL_DIR}" "${REMOTE_DEST}"
 elif [ "${COMMAND}" == "r" ]; then
-    duplicity restore -v8 "${REMOTE_DEST}" "${LOCAL_DIR}"
+    duplicity restore -v${VERBOSITY} "${REMOTE_DEST}" "${LOCAL_DIR}"
 else
     echo "Invalid command ${COMMAND}"
 fi
